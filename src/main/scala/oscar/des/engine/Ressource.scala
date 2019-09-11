@@ -24,7 +24,7 @@ import scala.collection.mutable._
 class Resource(m : Model, capacity: Int) {
 	
 	private var n = 0
-	private var pendings = new DoubleLinkedList ()
+	private var pendings = new ArrayBuffer()
 	
 	def request(block: => Unit) {
 		if (n < capacity) {

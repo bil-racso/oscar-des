@@ -4,6 +4,7 @@ name := "oscar-des"
 organization := "oscarlib"
 version := "4.1.0"
 
+libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
 libraryDependencies += "net.sf.jsci" % "jsci" % "1.2"
 
 // ============================================================================
