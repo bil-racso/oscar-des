@@ -3,19 +3,18 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 2.1 of the License, or
  * (at your option) any later version.
- *   
+ *
  * OscaR is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License  for more details.
- *   
+ *
  * You should have received a copy of the GNU Lesser General Public License along with OscaR.
  * If not, see http://www.gnu.org/licenses/lgpl-3.0.en.html
  ******************************************************************************/
-package oscar.examples.des
+package oscar.des.examples
 
 import oscar.des.engine._
-
 
 /**
  * two machines can be broken, there is only one repair person that can repair it at a time
@@ -35,7 +34,7 @@ class Machine3(m : Model, name: String, machineList : MachineList) extends Proce
 	
 	def isRepairInProgress : Boolean =  repairInProgress 
 	
-	def beAlive() {
+	def beAlive(): Unit = {
 		println(name+" is alive")
 		broken = false
 		repairInProgress = false
@@ -43,11 +42,11 @@ class Machine3(m : Model, name: String, machineList : MachineList) extends Proce
 			beBroken()
 		}
 	}
-	
-	def beBroken() {
+
+	def beBroken(): Unit = {
 		println(name+" is broken waiting to be repaired")
 		broken = true
-		
+
 		if (machineList.notAllBroken()) {
 			m.suspend(this) {
 				askToBeRepaired() //we wait because some of the machines are not yet broken
@@ -59,32 +58,32 @@ class Machine3(m : Model, name: String, machineList : MachineList) extends Proce
 			askToBeRepaired()
 		}
 	}
-	
-	def askToBeRepaired() {
+
+	def askToBeRepaired(): Unit = {
 		println(name+" is asking to be repaired")
 		m.request(repairPerson) { //ask for the repair person resource
 			beRepaired()
 		}
 	}
-	
-	def beRepaired() {
+
+	def beRepaired(): Unit = {
 		println(name+" being repaired")
 		m.wait(repairDur.nextInt(3).max(0)) {
 			m.release(repairPerson)
 			beAlive()
 		}
-	}		
-	
-	def run() {
+	}
+
+	def run(): Unit = {
 		beAlive()
 	}
 }
 
 class MachineList{
-	
+
 	var machines : List[Machine3] = List()
-	
-	def +(m: Machine3) {
+
+	def +(m: Machine3): Unit = {
 		machines = m :: machines
 	}
 	
@@ -99,14 +98,14 @@ class MachineList{
 
 
 object Machine3 {
-	def main(args: Array[String]) {
-  		val mod = new Model()
-  		val mlist = new MachineList()
+	def main(args: Array[String]): Unit = {
+		val mod = new Model()
+		val mlist = new MachineList()
 		val m1 = new Machine3(mod,"machine1",mlist)
 		m1.run()
 		val m2 = new Machine3(mod,"machine2",mlist)
 		m2.run()
-		mod.simulate(100,true);
-  		println("done1")
+		mod.simulate(100)
+		println("done1")
 	}
 }

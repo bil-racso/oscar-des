@@ -18,24 +18,22 @@ package oscar.des.engine
  * Every simulated object taking part in the simulation should extend this class.
  * @author pschaus
  */
-class Process (m: Model, name : String = "Process"){
+class Process(m: Model, name : String = "Process") {
 
 	private var suspending = false
 	private var suspended = {}
 	
-	def suspend(block : => Unit) {
-		if (suspending) {
-			//throw new RuntimeException("The process " + name + " is already suspending");
+	def suspend(block : => Unit): Unit = {
+		if (!suspending) {
+			suspending = true
+			suspended = block
 		}
-		suspending = true
-		suspended = block
 	}
-	
-	def resume(){
-		if (!suspending){
-			//throw new RuntimeException("The process " + name + " is not suspending");
+
+	def resume(): Unit = {
+		if (suspending){
+			suspending = false
+			suspended
 		}
-		suspending = false
-		suspended
 	}
 }

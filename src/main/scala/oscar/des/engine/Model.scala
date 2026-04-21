@@ -14,7 +14,7 @@
  ******************************************************************************/
 package oscar.des.engine
 
-import scala.collection.mutable._
+import scala.collection.mutable
 
 /**
  * This is the main engine of the simulation.
@@ -23,52 +23,52 @@ import scala.collection.mutable._
  */
 class Model {
    
-	private val eventQueue = new PriorityQueue[SimEvent]()
+	private val eventQueue = new mutable.PriorityQueue[SimEvent]()
 	private var currentTime = 0.0
 	
 	def clock() : Double = currentTime
 	
 	private def addEvent(e : SimEvent) = eventQueue += e
 	
-	def simulate(horizon: Int,verbose: Boolean = true) {
+	def simulate(horizon: Int, verbose: Boolean = true): Unit = {
 		while (eventQueue.nonEmpty) {
 			val e = eventQueue.dequeue()
 			if(verbose && e.time <= horizon && e.time != currentTime){
 				println("-----------> time: "+  e.time)
 			}
-			currentTime = e.time;
+			currentTime = e.time
 			if(currentTime <= horizon){
-				e.process
+				e.process()
 			}
 			else {
-				currentTime = horizon;
+				currentTime = horizon
 				return
 			}
 		}
 	}
 
-	def wait(duration : Double)(block : => Unit) {
+	def wait(duration : Double)(block : => Unit): Unit = {
 		assert(duration >= 0)
-		addEvent(new WaitEvent(clock + duration, block))
+		addEvent(new WaitEvent(clock() + duration, block))
 	}
-	
-    def wait(duration : Int)(block : => Unit) {
+
+	def wait(duration : Int)(block : => Unit): Unit = {
 		wait(duration.toDouble)(block)
 	}
-	
-	def request(r : Resource)(block : => Unit) {
+
+	def request(r : Resource)(block : => Unit): Unit = {
 		r.request(block)
 	}
 
-	def release(r : Resource) {
+	def release(r : Resource): Unit = {
 		r.release()
 	}
-	
-	def suspend(proc : Process)(block : => Unit) {
+
+	def suspend(proc : Process)(block : => Unit): Unit = {
 		proc.suspend(block)
 	}
 
-	def resume(proc : Process){
+	def resume(proc : Process): Unit = {
 		proc.resume()
 	}
 
