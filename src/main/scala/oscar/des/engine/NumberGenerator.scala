@@ -18,9 +18,9 @@ import scala.math._
 import scala.util.Random
 import JSci.maths.statistics._
 
-class NumberGenerator(dist: ProbabilityDistribution) {
+class NumberGenerator(dist: ProbabilityDistribution, seed: Long = Random.nextLong()) {
 
-  val generator = new Random()
+  val generator = new Random(seed)
 
   var generating = true
 

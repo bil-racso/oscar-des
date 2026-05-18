@@ -31,7 +31,6 @@ class Resource(m : Model, capacity: Int) {
            n += 1
            block
       } else {
-           println("resource saturated, don't give the request immediately")
            pendings += (() => block)
       }
   }
